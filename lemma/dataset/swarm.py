@@ -5,23 +5,48 @@ def _uid():return hashlib.md5(str(time.time()+random.random()).encode()).hexdige
 MODELS=["grok-4-fast-non-reasoning","grok-3","grok-3-mini"]
 MW=[0.6,0.25,0.15]
 
+_BANK_EN=["ocean","revolution","grandmother","telescope","monsoon","cinnamon",
+"cathedral","firefly","glacier","labyrinth","bamboo","thunder","origami","volcano",
+"saffron","midnight","accordion","avalanche","chameleon","dandelion","eclipse",
+"fossil","horizon","jasmine","kaleidoscope","lantern","mosaic","nebula","oracle",
+"pilgrim","quartz","raven","silhouette","tapestry","umbrella","vortex","wanderlust",
+"zenith","archipelago","bohemian","chrysalis","dervish","ephemeral","fjord","gossamer",
+"halcyon","iridescent","juxtapose","kinetic","luminous","melancholy","nomadic",
+"obsidian","paradox","quintessence","rhapsody","serendipity","transient","utopia",
+"vivacious","whimsical","canopy","ember","prism","anchor","drought","lullaby",
+"scaffold","mercury","thistle","pendulum","cobalt","estuary","marionette","tundra",
+"almanac","siren","terrazzo","conduit","patina","solstice","resonance","chimera",
+"filament","verdant","crucible","threshold","cartography","emissary","nocturne",
+"tributary","helios","artifact","cipher","meridian","sovereignty","chrysanthemum",
+"labyrinthine","catharsis","tessellation","phosphorescence","petrichor","aurora",
+"undertow","reverie","obsidian","plumeria","monstera","baobab","cenotaph","pagoda"]
+_BANK_MULTI=[
+"sakura","hanami","wabi-sabi","ikigai","komorebi","tsundoku","shinrin-yoku",
+"saudade","madrugada","desenrascanço","cafuné",
+"gemütlichkeit","wanderlust","zeitgeist","fernweh","schadenfreude","weltschmerz",
+"ubuntu","safari","bongo","hakuna","jambo","simba",
+"namaste","jugaad","chai","dharma","karma","moksha","raga","tabla","tandoor",
+"meraki","filoxenia","kefi","psithurism",
+"hygge","fika","lagom","friluftsliv","smörgåsbord","skål",
+"toska","troika","babushka","samovar","dacha",
+"sobremesa","duende","querencia","tertulia","madrugada",
+"bazaar","kismet","serendib","divan","caravan","harem",
+"qi","tao","feng-shui","dim-sum","kung-fu","wok",
+"hallyeo","jeong","han","nunchi","aegyo",
+"terroir","flâneur","joie-de-vivre","raison-d'être","coup-de-grâce",
+"dolce-vita","sprezzatura","chiaroscuro","piazza","grotto",
+"cenote","milpa","copal","temazcal","alebrije",
+"djembe","griot","baobab","dashiki","kente",
+"didgeridoo","billabong","barramundi","boomerang","outback",
+"marae","haka","mana","tapu","aroha",
+"favela","capoeira","axé","forró","açaí",
+"souk","hammam","tajine","medina","riad",
+"yurt","steppe","kumis","dombra","felt",
+"tuk-tuk","pad-thai","songkran","wai","muay",
+"pho","ao-dai","tet","banh-mi","non-la"]
 def _random_words(n=3):
-    try:
-        r=urllib.request.urlopen(f"https://random-word-api.herokuapp.com/word?number={n}",timeout=4)
-        return json.loads(r.read())
-    except:
-        bank=["ocean","revolution","grandmother","telescope","monsoon","cinnamon",
-              "cathedral","firefly","glacier","labyrinth","bamboo","thunder",
-              "origami","volcano","saffron","midnight","accordion","avalanche",
-              "chameleon","dandelion","eclipse","fossil","horizon","jasmine",
-              "kaleidoscope","lantern","mosaic","nebula","oracle","pilgrim",
-              "quartz","raven","silhouette","tapestry","umbrella","vortex",
-              "wanderlust","zenith","archipelago","bohemian","chrysalis",
-              "dervish","ephemeral","fjord","gossamer","halcyon","iridescent",
-              "juxtapose","kinetic","luminous","melancholy","nomadic","obsidian",
-              "paradox","quintessence","rhapsody","serendipity","transient",
-              "utopia","vivacious","whimsical","canopy","ember","prism"]
-        return random.sample(bank,min(n,len(bank)))
+    pool=_BANK_EN+_BANK_MULTI
+    return random.sample(pool,min(n,len(pool)))
 
 class Mem:
     def __init__(self):
