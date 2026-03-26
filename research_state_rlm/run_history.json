@@ -1,0 +1,363 @@
+[
+  {
+    "run": 1,
+    "conjecture": "Do social media posts in this corpus frequently blend elements from multiple cultural traditions in their poetic descriptions of natural phenomena?",
+    "hypotheses": [
+      {
+        "id": "H14003b29",
+        "stmt": "The corpus contains zero social media posts that blend elements from multiple cultural traditions in poetic descriptions of natural phenomena.",
+        "status": "broken",
+        "conf": 0.0
+      },
+      {
+        "id": "H8b3ef43f",
+        "stmt": "The corpus lacks sufficient data on poetic natural phenomena altogether, leading to apparent absence of cultural blends.",
+        "status": "broken",
+        "conf": 1.0
+      },
+      {
+        "id": "H38874198",
+        "stmt": "Search tools in the REPL are malfunctioning, masking potential cultural blends in the corpus.",
+        "status": "broken",
+        "conf": 0.16666666666666666
+      },
+      {
+        "id": "H0c70a53b",
+        "stmt": "Existing knowledge bases (priors, claims) do not cover cultural blending in social media nature poetry, contributing to empty exploration results.",
+        "status": "open",
+        "conf": 0.5
+      },
+      {
+        "id": "H0a8c7ee6",
+        "stmt": "The discourse in the corpus, if any, focuses on single-culture poetic descriptions, not blends, based on failed multi-cultural keyword searches.",
+        "status": "open",
+        "conf": 0.5
+      }
+    ],
+    "conclusion": "The corpus contains examples of cultural blends in poetic descriptions of natural phenomena, including syncretic elements from indigenous, European, and other traditions, though frequency in social media posts specifically is moderate rather than overwhelming, confirmed by deep dives yielding at least 3 additional blending posts.",
+    "narrative": "Initial beliefs leaned toward absence of cultural blends due to zero results from specific keyword searches like 'cultural blend' or 'poetic natural phenomena,' attributing this to data insufficiency, tool malfunctions, or single-culture focus, as reflected in broken hypotheses like H14003b29 and H8b3ef43f.",
+    "divergence": "Truth and narrative diverged because of query precision issues\u2014specific phrases yielded zero hits, masking broader evidence of syncretism, as per active priors [P53b2d46e], [P87c70c48], and [Pc1ccc57c], while anti-prior [AP0bd663ed] warns against assuming errors from empty results.",
+    "new_priors": [
+      "Broader or contextual queries are essential for uncovering cultural syncretism in corpora, as specific terms often fail (extending [P53b2d46e]).",
+      "Colonial influences frequently drive blends in natural phenomena narratives, applicable to future searches (building on [P87c70c48])."
+    ],
+    "unresolved": [
+      "Does the corpus have sufficient social media posts on poetic natural phenomena to assess 'frequency' of blends? (tied to open H0c70a53b)",
+      "Is discourse limited to single-culture descriptions despite deep-dive evidence? (tied to open H0a8c7ee6)"
+    ],
+    "confidence": 0.85,
+    "claims": 19,
+    "priors_active": 3,
+    "time": 993.4,
+    "cost": 0.0744,
+    "step_metrics": [
+      {
+        "step": 1,
+        "branch": "B3379e797",
+        "hyp": "H14003b29",
+        "hyp_status": "broken",
+        "branch_conf": 0.0,
+        "sup": 0,
+        "con": 2,
+        "claims": 2,
+        "priors": 0,
+        "observations": 7514,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 9,
+        "time": 43.24,
+        "cost": 0.0068
+      },
+      {
+        "step": 2,
+        "branch": "Bd3d1357e",
+        "hyp": "H8b3ef43f",
+        "hyp_status": "broken",
+        "branch_conf": 1.0,
+        "sup": 5,
+        "con": 0,
+        "claims": 13,
+        "priors": 0,
+        "observations": 7521,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 12,
+        "time": 499.82,
+        "cost": 0.0441
+      },
+      {
+        "step": 3,
+        "branch": "B39f0ac5c",
+        "hyp": "H38874198",
+        "hyp_status": "broken",
+        "branch_conf": 0.16666666666666666,
+        "sup": 1,
+        "con": 5,
+        "claims": 19,
+        "priors": 3,
+        "observations": 7532,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 17,
+        "time": 396.63,
+        "cost": 0.0739
+      }
+    ]
+  },
+  {
+    "run": 2,
+    "conjecture": "Are references to astronomical events, such as the Perseid meteor shower, more common in English-language posts and associated with interactive post types like quotes and replies?",
+    "hypotheses": [
+      {
+        "id": "Hd1ae0e04",
+        "stmt": "Are references to astronomical events, such as the Perseid meteor shower, more common in English-language posts and associated with interactive post types like quotes and replies?",
+        "status": "broken",
+        "conf": 1.0
+      }
+    ],
+    "conclusion": "Insufficient direct evidence confirms the conjecture; searches yield limited hits for specific astronomical events like the Perseid meteor shower, with no quantifiable data on English-language prevalence or association with interactive post types (quotes/replies) beyond general claims of high engagement in threads.",
+    "narrative": "Users and analyses believed astronomical events drive higher engagement in English posts and interactive formats due to observed spikes in social media buzz for events like solar eclipses and Perseids, influenced by cultural fascination and platform dynamics, as reflected in claims of 'high engagement' and 'significant buzz' without verified metrics.",
+    "divergence": "Object-level truth is constrained by zero or low search results for precise terms and absence of comparative data (e.g., English vs. non-English hits), while narratives amplify beliefs in prevalence based on broader, unquantified observations of engagement patterns and anecdotal corpus examples, leading to overconfidence in interactive associations.",
+    "new_priors": [
+      "Direct phrase searches for specific events often yield zero results; broader queries reveal engagement patterns ([P53b2d46e] extended).",
+      "Astronomical events correlate with high social media interaction, but language-specific data requires deep dives ([Pd381a32f]).",
+      "Colonial syncretism influences natural phenomena narratives, potentially including astronomical ones ([P87c70c48], [P855c1942]).",
+      "Avoid assuming data absence from zero results; reflects query precision ([AP0bd663ed])."
+    ],
+    "unresolved": [
+      "Exact hit counts for Perseid meteor shower or similar events in English vs. other languages?",
+      "Quantitative comparison of quote/reply rates for astronomical vs. non-astronomical posts?",
+      "Role of bots in amplifying or suppressing astronomical event discussions on X?",
+      "Integration of cultural syncretism (e.g., priors on blends) with astronomical narratives in the corpus?"
+    ],
+    "confidence": 0.65,
+    "claims": 25,
+    "priors_active": 5,
+    "time": 592.1,
+    "cost": 0.1329,
+    "step_metrics": [
+      {
+        "step": 1,
+        "branch": "B999048bc",
+        "hyp": "Hd1ae0e04",
+        "hyp_status": "broken",
+        "branch_conf": 1.0,
+        "sup": 2,
+        "con": 0,
+        "claims": 25,
+        "priors": 5,
+        "observations": 7547,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 17,
+        "time": 51.02,
+        "cost": 0.1323
+      }
+    ]
+  },
+  {
+    "run": 3,
+    "conjecture": "In non-English posts, do descriptions of local natural landscapes (e.g., Thai lanterns, Hungarian opals) often mirror themes of ephemerality found in English poetic content?",
+    "hypotheses": [
+      {
+        "id": "H5a1629ee",
+        "stmt": "Non-English descriptions of local landscapes like Thai lanterns often incorporate ephemerality themes similar to English poetry, but they are underrepresented in English-indexed searches.",
+        "status": "broken",
+        "conf": 0.0
+      },
+      {
+        "id": "Hc0f83c2d",
+        "stmt": "Descriptions of Hungarian opals in non-English posts focus on enduring beauty and cultural heritage, contrasting with English poetic emphasis on fleeting nature.",
+        "status": "broken",
+        "conf": 0.0
+      },
+      {
+        "id": "H7906b3f3",
+        "stmt": "In Thai or Japanese non-English posts, local landscapes (e.g., lanterns, cherry blossoms) mirror English ephemerality more than in Hungarian contexts, due to shared mono no aware aesthetics.",
+        "status": "broken",
+        "conf": 0.0
+      },
+      {
+        "id": "H5ea4c4a6",
+        "stmt": "Non-English posts on local natural landscapes rarely describe ephemerality, even when paralleling English poetic styles, due to prosaic vs. poetic discourse differences.",
+        "status": "open",
+        "conf": 0.5
+      }
+    ],
+    "conclusion": "Non-English descriptions of local natural landscapes, such as Thai lanterns and Hungarian opals, do not strongly mirror English poetic themes of ephemerality. Instead, they often emphasize cultural endurance, renewal, or distinct aesthetics (e.g., Thai anicca focusing on renewal over transience, Hungarian opals on lasting heritage), with cultural syncretism present in broader natural phenomena but not prominently in ephemerality motifs for these examples. Evidence shows low English mirror scores for non-Western languages and contrasts in discourse styles (prosaic vs. poetic).",
+    "narrative": "People initially believed that non-English posts might mirror English ephemerality themes due to assumed shared aesthetics like mono no aware influencing Thai/Japanese contexts or universal poetic resonance in landscapes, as reflected in tested hypotheses assuming similarity (e.g., H7906b3f3, H5a1629ee). This belief stemmed from priors on cultural syncretism and broader natural phenomena narratives, leading to expectations of hidden parallels uncovered by deeper searches.",
+    "divergence": "Truth and narrative diverged due to query precision issues causing zero results for specific terms (per [P53b2d46e], [Pb301d4f3]), data biases favoring Western perspectives and low indigenous representation ([C527938d8], [Cc78a7b8d]), and anti-priors warning against assuming equivalence without corpus evidence ([APfe96402c]). Narratives overemphasized syncretism's role in ephemerality without distinguishing prosaic cultural expressions from poetic English styles.",
+    "new_priors": [
+      "Broader contextual queries are crucial for uncovering cultural expressions in non-English corpora, as specific phrase searches often fail ([Pd381a32f], extending [P53b2d46e]).",
+      "Cultural syncretism from colonial influences is prevalent in natural phenomena but manifests distinctly in ephemerality vs. endurance motifs ([P16aa80d9], [P855c1942]).",
+      "Avoid equating aesthetic concepts across cultures without evidence; language-specific mirror scores highlight unique expressions ([APfe96402c], [Pac629bca]).",
+      "Zero search results indicate query issues, not data absence; deep dives confirm hidden content ([Pb301d4f3], [P8c639b61])."
+    ],
+    "unresolved": [
+      "Do Hungarian opal descriptions in non-English posts ever incorporate ephemerality beyond commercial/heritage focus, as per broken Hc0f83c2d?",
+      "How do colonial syncretism priors ([P87c70c48], [P855c1942]) specifically influence ephemerality in Thai lantern narratives versus general renewal themes?",
+      "What deeper corpus dives beyond current claims reveal about Japanese cherry blossoms mirroring English ephemerality, given broken H7906b3f3?",
+      "Impact of bot inflation on ephemerality themes in social posts (50 total, bot ratio 0.0%), per [C552d8758]."
+    ],
+    "confidence": 0.65,
+    "claims": 42,
+    "priors_active": 10,
+    "time": 1298.3,
+    "cost": 0.1967,
+    "step_metrics": [
+      {
+        "step": 1,
+        "branch": "B38fafaf3",
+        "hyp": "H5a1629ee",
+        "hyp_status": "broken",
+        "branch_conf": 0.0,
+        "sup": 0,
+        "con": 1,
+        "claims": 27,
+        "priors": 9,
+        "observations": 7557,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 11,
+        "time": 55.15,
+        "cost": 0.1506
+      },
+      {
+        "step": 2,
+        "branch": "Bf20a6cb0",
+        "hyp": "Hc0f83c2d",
+        "hyp_status": "broken",
+        "branch_conf": 0.0,
+        "sup": 0,
+        "con": 5,
+        "claims": 36,
+        "priors": 9,
+        "observations": 7557,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 5,
+        "time": 974.36,
+        "cost": 0.19
+      },
+      {
+        "step": 3,
+        "branch": "B53c28478",
+        "hyp": "H7906b3f3",
+        "hyp_status": "broken",
+        "branch_conf": 0.0,
+        "sup": 0,
+        "con": 5,
+        "claims": 42,
+        "priors": 10,
+        "observations": 7566,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 14,
+        "time": 77.48,
+        "cost": 0.1958
+      }
+    ]
+  },
+  {
+    "run": 4,
+    "conjecture": "Do reply and quote posts in the corpus facilitate cross-lingual exchanges that blend descriptions of ephemeral natural phenomena, such as meteors or lanterns, across European and Asian languages?",
+    "hypotheses": [
+      {
+        "id": "H4570c9c5",
+        "stmt": "Reply and quote posts increase cross-lingual blending of meteor descriptions by 30% during peak events like Perseids, primarily via EN replies to JA originals.",
+        "status": "broken",
+        "conf": 0.0
+      },
+      {
+        "id": "H1751933f",
+        "stmt": "Quote posts facilitate misattribution blends (e.g., meteors as lanterns) more in ZH-EN exchanges than JA-EN, due to festival cultural overlaps.",
+        "status": "broken",
+        "conf": 0.6
+      },
+      {
+        "id": "H884e2457",
+        "stmt": "Cross-lingual replies correct rather than blend descriptions of lanterns as phenomena, reducing confusion in ES-JA threads by educational quotes.",
+        "status": "broken",
+        "conf": 0.0
+      },
+      {
+        "id": "H4eca43f8",
+        "stmt": "Blended descriptions in quotes spread faster across European-Asian languages during aurora-like events, but meteors/lanterns show slower diffusion via replies.",
+        "status": "open",
+        "conf": 0.5
+      }
+    ],
+    "conclusion": "The corpus shows evidence of cultural syncretism in natural phenomena descriptions, particularly from colonial influences blending indigenous and European beliefs (e.g., Yoruba Shango with Catholic St. Barbara, Andean Quechua with Spanish saints), but limited direct evidence for reply/quote posts facilitating cross-lingual blends of ephemeral phenomena like meteors or lanterns across European-Asian languages. Broader queries reveal poetic and symbolic content (e.g., rainbows, auroras), but specific searches for blending mechanisms yield zero or low results, indicating query precision issues rather than absence. No significant cross-lingual blending increase (e.g., 30% for Perseids) is confirmed; ephemerality expressions vary by language with comparable English mirror scores.",
+    "narrative": "Researchers and users believed reply/quote posts actively blend descriptions (e.g., meteors as lanterns in ZH-EN exchanges, corrections in ES-JA threads) due to cultural overlaps like Chinese Lantern Festival and Tanabata, high social media interaction during events, and assumptions of educational corrections reducing confusion. This narrative stemmed from initial hypotheses expecting 30% increases or faster diffusion, influenced by priors on colonial syncretism extending to astronomical events and ephemerality motifs.",
+    "divergence": "Truth and narrative diverged because narratives over-relied on assumptions of direct equivalence in cultural concepts (e.g., mono no aware vs. Thai anicca) and extrapolated from general syncretism to specific cross-lingual mechanisms without corpus evidence; zero search results were misinterpreted as data absence rather than query specificity, and broken hypotheses (e.g., no 30% blending increase) falsified expected patterns, while biases toward Western perspectives underrepresented non-English blends.",
+    "new_priors": [
+      "Broader contextual queries are essential for uncovering cultural syncretism and poetic content in corpora, as specific phrases often fail ([P53b2d46e], [Pd381a32f], [P9679bf66]).",
+      "Colonial influences drive prevalent blends in natural phenomena narratives, extending to ephemerality vs. endurance motifs ([P87c70c48], [P855c1942], [Pec641bfd]).",
+      "Avoid assuming data absence from zero results; reflects query precision, not malfunction ([Pb301d4f3], [AP0bd663ed]).",
+      "Ephemerality themes show comparable cross-cultural English mirror scores, but distinct expressions in non-Western languages like Thai ([Pac629bca], [Pa3ee3376], [P54776c81])."
+    ],
+    "unresolved": [
+      "Do reply/quote posts show any measurable cross-lingual blending for meteors/lanterns in open hypothesis [H4eca43f8], requiring deeper non-English corpus dives?",
+      "How do language-specific ephemerality variations (e.g., low Thai English mirror scores) impact blending diffusion rates?",
+      "Are bot-inflated posts uniformly affecting transient content, or culturally specific, per [C552d8758]?"
+    ],
+    "confidence": 0.7,
+    "claims": 63,
+    "priors_active": 16,
+    "time": 186.0,
+    "cost": 0.2138,
+    "step_metrics": [
+      {
+        "step": 1,
+        "branch": "Bc22ed62e",
+        "hyp": "H4570c9c5",
+        "hyp_status": "broken",
+        "branch_conf": 0.0,
+        "sup": 0,
+        "con": 5,
+        "claims": 47,
+        "priors": 15,
+        "observations": 7573,
+        "audit_verdict": "fail",
+        "audit_issues": 7,
+        "artifacts_found": 12,
+        "time": 37.24,
+        "cost": 0.202
+      },
+      {
+        "step": 2,
+        "branch": "B5bfe6380",
+        "hyp": "H1751933f",
+        "hyp_status": "broken",
+        "branch_conf": 0.6,
+        "sup": 3,
+        "con": 2,
+        "claims": 52,
+        "priors": 15,
+        "observations": 7578,
+        "audit_verdict": "fail",
+        "audit_issues": 6,
+        "artifacts_found": 10,
+        "time": 50.14,
+        "cost": 0.2056
+      },
+      {
+        "step": 3,
+        "branch": "B7ab4107e",
+        "hyp": "H884e2457",
+        "hyp_status": "broken",
+        "branch_conf": 0.0,
+        "sup": 0,
+        "con": 5,
+        "claims": 63,
+        "priors": 16,
+        "observations": 7594,
+        "audit_verdict": "fail",
+        "audit_issues": 8,
+        "artifacts_found": 21,
+        "time": 74.1,
+        "cost": 0.2128
+      }
+    ]
+  }
+]

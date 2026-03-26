@@ -134,7 +134,9 @@ class RLMSession:
                 "sup":c.sup,"con":c.con,"deps":c.deps,"src_obs":c.src_obs}
     def _add_claim(self,stmt,conf=0.5,obs_ids=None):
         from .models import Claim
-        c=Claim(stmt=stmt,conf=conf,src_obs=obs_ids or [])
+        try:conf=float(conf)
+        except:conf=0.5
+        c=Claim(stmt=str(stmt)[:500],conf=min(max(conf,0.0),1.0),src_obs=obs_ids or [])
         self.graph.add(c);return c.id
     def _add_prior(self,stmt,typ="domain",scope=""):
         p=self.priors.promote(stmt,typ=typ,scope=scope)

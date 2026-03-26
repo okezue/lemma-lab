@@ -5,7 +5,7 @@ from ..models import Hyp
 class HypAgent(BaseAgent):
     def run(self,conjecture):
         session=self._repl()
-        session.env["conjecture"]=conjecture
+        session.locals["conjecture"]=conjecture
         role=(
             "You are a HYPOTHESIS GENERATOR with a REPL sandbox.\n\n"
             "The conjecture is in `conjecture`. Write Python code to:\n"

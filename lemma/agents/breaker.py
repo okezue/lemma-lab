@@ -5,11 +5,11 @@ from ..models import Claim,Obs
 class BreakerAgent(BaseAgent):
     def run(self,hyp,branch):
         session=self._repl()
-        session.env["hypothesis"]=hyp.stmt
-        session.env["falsifiers"]=hyp.falsifiers
-        session.env["branch_sup"]=len(branch.sup)
-        session.env["branch_con"]=len(branch.con)
-        session.env["assumptions"]=branch.assumptions
+        session.locals["hypothesis"]=hyp.stmt
+        session.locals["falsifiers"]=hyp.falsifiers
+        session.locals["branch_sup"]=len(branch.sup)
+        session.locals["branch_con"]=len(branch.con)
+        session.locals["assumptions"]=branch.assumptions
         role=(
             "You are a BREAKER agent with a REPL sandbox. Your goal is to "
             "CHALLENGE and FALSIFY the hypothesis in `hypothesis`.\n\n"
@@ -26,15 +26,18 @@ class BreakerAgent(BaseAgent):
             "9. FINAL({'smuggled_assumptions': [...], 'alternative_explanations': [...]})\n\n"
             "Look for: alternative explanations, source credibility issues, "
             "sarcasm misreads, chronology problems, smuggled assumptions.")
+        pre_claims=set(c.id for c in self.graph.all_claims())
         result=session.run(f"Break this hypothesis: {hyp.stmt}",role=role,max_steps=8)
         arts=[]
-        for entry in session.history:
-            if entry.get("type")=="exec" and "add_claim" in entry.get("code",""):
-                obs=Obs(src="breaker_rlm",content=entry.get("output","")[:300],
-                        meta={"role":"counterevidence","hyp":hyp.id})
-                self.ledger.add(obs);arts.append(obs)
-        new_claims=[c for c in self.graph.all_claims() if c.id not in
-                    {cid for cid in branch.sup+branch.con}]
+        for it in session.iterations:
+            for cb in it.code_blocks:
+                if cb.result and cb.result.stdout:
+                    obs=Obs(src="breaker_rlm",content=cb.result.stdout[:300],
+                            meta={"role":"counterevidence","hyp":hyp.id,
+                                  "code":cb.code[:200]})
+                    self.ledger.add(obs);arts.append(obs)
+        new_claims=[c for c in self.graph.all_claims() if c.id not in pre_claims
+                    and c.id not in {cid for cid in branch.sup+branch.con}]
         for c in new_claims[-5:]:
             branch.con.append(c.id);arts.append(c)
         if isinstance(result,dict):

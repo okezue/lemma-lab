@@ -5,11 +5,11 @@ from ..models import Claim,Obs
 class ProverAgent(BaseAgent):
     def run(self,hyp,branch):
         session=self._repl()
-        session.env["hypothesis"]=hyp.stmt
-        session.env["hyp_why"]=hyp.why
-        session.env["hyp_preds"]=hyp.preds
-        session.env["branch_sup"]=len(branch.sup)
-        session.env["branch_con"]=len(branch.con)
+        session.locals["hypothesis"]=hyp.stmt
+        session.locals["hyp_why"]=hyp.why
+        session.locals["hyp_preds"]=hyp.preds
+        session.locals["branch_sup"]=len(branch.sup)
+        session.locals["branch_con"]=len(branch.con)
         role=(
             "You are a PROVER agent with a REPL sandbox. Your goal is to find "
             "evidence SUPPORTING the hypothesis stored in `hypothesis`.\n\n"
@@ -23,15 +23,18 @@ class ProverAgent(BaseAgent):
             "IMPORTANT: Only cite evidence that exists in the data. "
             "Check existing claims() to avoid duplicates. "
             "Keep your root context small — offload search results to variables.")
+        pre_claims=set(c.id for c in self.graph.all_claims())
         result=session.run(f"Find evidence supporting: {hyp.stmt}",role=role,max_steps=8)
         arts=[]
-        for entry in session.history:
-            if entry.get("type")=="exec" and "add_claim" in entry.get("code",""):
-                obs=Obs(src="prover_rlm",content=entry.get("output","")[:300],
-                        meta={"role":"supporting_evidence","hyp":hyp.id})
-                self.ledger.add(obs);arts.append(obs)
-        new_claims=[c for c in self.graph.all_claims() if c.id not in
-                    {cid for cid in branch.sup+branch.con}]
+        for it in session.iterations:
+            for cb in it.code_blocks:
+                if cb.result and cb.result.stdout:
+                    obs=Obs(src="prover_rlm",content=cb.result.stdout[:300],
+                            meta={"role":"supporting_evidence","hyp":hyp.id,
+                                  "code":cb.code[:200]})
+                    self.ledger.add(obs);arts.append(obs)
+        new_claims=[c for c in self.graph.all_claims() if c.id not in pre_claims
+                    and c.id not in {cid for cid in branch.sup+branch.con}]
         for c in new_claims[-5:]:
             branch.sup.append(c.id);arts.append(c)
         if isinstance(result,dict):

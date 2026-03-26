@@ -40,7 +40,9 @@ class AuditorAgent(BaseAgent):
                 for oid in c.src_obs[:2]:
                     o=self.ledger.get(oid)
                     if o:obs_preview+=f" [from {o.src}: {o.content[:80]}]"
-                details.append(f"  [{c.id}] (conf={c.conf:.2f}) {c.stmt}{obs_preview}")
+                try:cf=float(c.conf)
+                except:cf=0.5
+                details.append(f"  [{c.id}] (conf={cf:.2f}) {c.stmt}{obs_preview}")
         return "\n".join(details) if details else "(none)"
 
     def _audit_sources(self,branch):
