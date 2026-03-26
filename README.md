@@ -8,65 +8,141 @@ Each agent operates as a recursive LM in the style of [alexzhang13/rlm](https://
 
 ```mermaid
 graph TB
-    U([Conjecture]) --> HYP
+    U[Conjecture] --> HYP
+    SCAN[Corpus Scan] --> HYP
 
-    subgraph Dispatch
-        HYP[Hypothesis Gen] --> Score
-        Score --> Select
+    subgraph Dispatcher
+        HYP[Hypothesis Generator] --> H1[H1]
+        HYP --> H2[H2]
+        HYP --> H3[H3]
+        H1 & H2 & H3 --> SCORE[Score]
+        SCORE --> SELECT[Select Best]
     end
 
-    Select --> Branch
+    SELECT --> BRANCH
 
-    subgraph Branch
+    subgraph BRANCH [Branch Execution]
+        direction TB
+
+        subgraph PROVER [Prover · RLM Session]
+            P_REPL[REPL Sandbox] --> P_SEARCH[search · timeline · papers]
+            P_SEARCH --> P_STORE[store findings]
+            P_STORE --> P_CLAIM[add_claim · link_claims]
+            P_STORE --> P_SUB[rlm_query sub-investigation]
+        end
+
+        subgraph BREAKER [Breaker · RLM Session]
+            B_REPL[REPL Sandbox] --> B_SEARCH[search errata · bots · figures]
+            B_SEARCH --> B_STORE[store counterevidence]
+            B_STORE --> B_CLAIM[add_claim · link contradict]
+            B_STORE --> B_CRED[check_source credibility]
+        end
+
+        subgraph SCOUT [Scout]
+            S_IN[Artifact] --> S_BLIND[Blind inspection]
+            S_BLIND --> S_EXTRACT[Entities · misreadings · data]
+        end
+
+        PROVER --> AUDIT[Auditor]
+        BREAKER --> AUDIT
+        SCOUT --> AUDIT
+    end
+
+    AUDIT --> PASS{pass}
+    AUDIT --> WARN{warn}
+    AUDIT --> FAIL{fail}
+    PASS --> PROMOTE[Promote to Prior]
+    FAIL --> BROKEN[Mark Broken]
+
+    subgraph SUBSTRATE [Epistemic Substrate]
         direction LR
-        Prover <--> Breaker
-        Prover --> Auditor
-        Breaker --> Auditor
-        Scout --> Auditor
+
+        subgraph LEDGER [Ledger]
+            OBS1[Observation] --- OBS2[Observation] --- OBS3[...]
+        end
+
+        subgraph GRAPH [Claim Graph]
+            C1[Claim] -->|support| C2[Claim]
+            C3[Claim] -->|contradict| C2
+            C4[Claim] -->|depend| C1
+        end
+
+        subgraph CAPSULES [Branch Capsules]
+            CAP1[Branch A] --- CAP2[Branch B]
+            CAP1 --> BEL1[belief trajectory]
+            CAP1 --> DEP1[prior deps]
+        end
+
+        subgraph AGENDA [Agenda]
+            ACT[Active] --- STL[Stalled] --- TENS[Tensions]
+        end
+
+        subgraph PRIORS [Prior Library]
+            PR1[Domain Prior] --- PR2[Source Prior] --- PR3[Procedural Prior]
+            PR1 --> SCOPE[scope · xfer · evidence · cex]
+        end
+
+        subgraph ANTI [Anti-Priors]
+            AP1[Trap] --- AP2[Trap] --- AP3[...]
+        end
     end
 
-    subgraph REPL["RLM Sandbox (per agent)"]
+    P_CLAIM --> GRAPH
+    B_CLAIM --> GRAPH
+    S_EXTRACT --> GRAPH
+    PROMOTE --> PRIORS
+    P_SEARCH <--> LEDGER
+    B_SEARCH <--> LEDGER
+
+    subgraph FEEDBACK [Feedback Loop]
         direction LR
-        Code[Code Exec] --> Vars[Variables]
-        Vars --> Sub[rlm_query]
-        Sub --> Code
+
+        subgraph TOOLSMITH [Toolsmith]
+            TRACES[Tool traces] --> PATTERN[Detect patterns]
+            PATTERN --> REGISTER[Register composite]
+        end
+
+        subgraph EDITOR [Prior Editor]
+            REVIEW[Review priors vs claims] --> STRENGTHEN[Strengthen]
+            REVIEW --> WEAKEN[Weaken]
+            REVIEW --> DEMOTE[Demote]
+            REVIEW --> NEW_AP[Create anti-prior]
+        end
+
+        subgraph REPAIR [Proof Repair]
+            DEMOTE --> STALE[Mark claims stale]
+            STALE --> HALVE[Halve branch confidence]
+            HALVE --> REOPEN[Requeue for investigation]
+        end
+
+        subgraph ANALYST [Analyst]
+            DATA[Aggregate data] --> STATS[Statistics]
+            DATA --> VIZ[Graph specs]
+            DATA --> CHECK[Fact-check claims]
+        end
     end
 
-    Prover <-.-> REPL
-    Breaker <-.-> REPL
+    REOPEN --> SELECT
+    REGISTER --> TOOLS
 
-    subgraph Substrate
-        Ledger --> Graph
-        Graph --> Capsules
-        Capsules --> Agenda
-        Agenda --> Priors
-        Priors --> AntiPriors[Anti-Priors]
+    subgraph TOOLS [Tool Library]
+        direction LR
+        T1[search] --- T2[timeline] --- T3[thread]
+        T4[figures] --- T5[papers] --- T6[bots]
+        T7[credibility] --- T8[quote chain] --- T9[repost tree]
+        TC1[rumor tracer] --- TC2[language shift] --- TC3[figure linker]
+        TC4[coverage gap] --- TC5[benchmark diff]
     end
 
-    REPL <--> Substrate
+    P_SEARCH <--> TOOLS
+    B_SEARCH <--> TOOLS
 
-    Auditor --> |proved| Priors
-    Auditor --> |broken| Agenda
-
-    subgraph Feedback
-        Toolsmith --> Tools
-        PriorEditor --> Priors
-        PriorEditor --> |demote| Repair[Proof Repair]
-        Repair --> Capsules
-        Analyst --> Graph
-    end
-
-    Select --> Feedback
-    Auditor --> Synth[Synthesizer]
-    Synth --> Report([Report])
-
-    subgraph Tools
-        Primitives
-        Composites
-        Toolsmith --> Composites
-    end
-
-    REPL <--> Tools
+    SELECT --> SYN[Synthesizer]
+    SYN --> OBJ[Object conclusion]
+    SYN --> NAR[Narrative conclusion]
+    SYN --> DIV[Divergence]
+    SYN --> UNR[Unresolved]
+    SYN --> NP[New priors]
 ```
 
 ## How it works
