@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+dataset_data/
+lemma_state/
+research_state/
+benchmark_results.json
+grok-models.json
+*.json.bak
