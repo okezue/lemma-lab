@@ -4,57 +4,34 @@ from ..models import Hyp
 
 class HypAgent(BaseAgent):
     def run(self,conjecture):
-        data_ctx=self._scan_available_data()
-        sys=self._sys(
-            "You generate research hypotheses. Given a conjecture, available data, "
-            "and priors, propose 3-7 candidate hypotheses. Each needs: statement, "
-            "reasoning, testable predictions, falsifiers, and tools needed. "
-            "Make hypotheses specific and discriminating - each should make "
-            "different predictions about what the evidence will show.")
-        claims=self._claims_ctx()
-        prompt=(
-            f"Conjecture: {conjecture}\n\n"
-            f"Available data in the system:\n{data_ctx}\n\n"
-            f"Existing claims:\n{claims}\n\n"
-            f"Available tools: {self._tool_list()}\n\n"
-            f"Propose 3-7 hypotheses as JSON:\n"
-            f'{{"hypotheses":[{{"stmt":"specific testable statement",'
-            f'"why":"reasoning for why this might be true",'
-            f'"preds":["prediction 1","prediction 2"],'
-            f'"falsifiers":["what would disprove this"],'
-            f'"tools":["tools to use"]}}]}}')
-        r=self.llm.structured(f"{sys}\n\n{prompt}",
-                              {"type":"object"},role="strong")
-        hs=r.get("hypotheses",r if isinstance(r,list) else [r])
-        if not isinstance(hs,list):hs=[hs]
+        session=self._repl()
+        session.env["conjecture"]=conjecture
+        role=(
+            "You are a HYPOTHESIS GENERATOR with a REPL sandbox.\n\n"
+            "The conjecture is in `conjecture`. Write Python code to:\n"
+            "1. Explore the data: obs_count(), search('relevant keyword'), search_mod('x_post')\n"
+            "2. Check existing knowledge: priors(), claims(), match_priors(conjecture)\n"
+            "3. Look at what's available: tool_list(), papers(), figures()\n"
+            "4. Sample posts to understand the discourse\n"
+            "5. Generate 3-7 hypotheses based on what you ACTUALLY found\n\n"
+            "When ready, call FINAL with a list of hypothesis dicts:\n"
+            "FINAL([{'stmt':'specific testable statement','why':'reasoning',"
+            "'preds':['prediction'],'falsifiers':['what would disprove'],"
+            "'tools':['tools to use']}])\n\n"
+            "Each hypothesis must make DIFFERENT predictions. "
+            "Ground them in real data patterns you observed.")
+        result=session.run(f"Generate hypotheses for: {conjecture}",role=role,max_steps=8)
         hyps=[]
-        for h in hs:
-            hyp=Hyp(stmt=h.get("stmt",""),why=h.get("why",""),
-                    preds=h.get("preds",[]),falsifiers=h.get("falsifiers",[]),
-                    tools=h.get("tools",[]))
-            hyps.append(hyp)
+        if isinstance(result,str):
+            try:result=json.loads(result)
+            except:pass
+        if isinstance(result,dict):result=result.get("hypotheses",result.get("theses",[result]))
+        if not isinstance(result,list):result=[result]
+        for h in result:
+            if not isinstance(h,dict):continue
+            hyps.append(Hyp(stmt=h.get("stmt",""),why=h.get("why",""),
+                           preds=h.get("preds",[]),falsifiers=h.get("falsifiers",[]),
+                           tools=h.get("tools",[])))
+        if not hyps:
+            hyps=[Hyp(stmt=conjecture,why="fallback")]
         return hyps
-
-    def _scan_available_data(self):
-        parts=[]
-        if self.ledger:
-            n=len(self.ledger)
-            if n>0:
-                mods={}
-                srcs={}
-                for o in list(self.ledger.obs.values())[:200]:
-                    mods[o.mod]=mods.get(o.mod,0)+1
-                    srcs[o.src]=srcs.get(o.src,0)+1
-                parts.append(f"Observations: {n}")
-                parts.append(f"  Modalities: {dict(sorted(mods.items(),key=lambda x:-x[1])[:10])}")
-                parts.append(f"  Top sources: {dict(sorted(srcs.items(),key=lambda x:-x[1])[:10])}")
-                samples=list(self.ledger.obs.values())[:5]
-                for s in samples:
-                    parts.append(f"  Sample [{s.src}] ({s.mod}): {s.content[:100]}...")
-        if self.graph and len(self.graph)>0:
-            parts.append(f"Claims: {len(self.graph)}")
-        return "\n".join(parts) if parts else "(no data loaded yet)"
-
-    def _tool_list(self):
-        if not self.tools:return "none"
-        return ", ".join(self.tools.list_tools())

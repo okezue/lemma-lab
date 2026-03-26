@@ -1,4 +1,5 @@
 from abc import ABC,abstractmethod
+from ..rlm import RLMSession
 
 class BaseAgent(ABC):
     def __init__(self,llm,ledger,graph,priors,capsules,tools=None):
@@ -6,6 +7,9 @@ class BaseAgent(ABC):
         self.priors=priors;self.caps=capsules;self.tools=tools
     @abstractmethod
     def run(self,*a,**kw):pass
+    def _repl(self):
+        return RLMSession(self.ledger,self.graph,self.priors,
+                          self.caps,self.tools,self.llm)
     def _sys(self,role_desc):
         pc=self.priors.to_context() if self.priors else "(no priors)"
         return f"{role_desc}\n\nActive priors:\n{pc}"
