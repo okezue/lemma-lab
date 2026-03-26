@@ -8,81 +8,65 @@ Each agent operates as a recursive LM in the style of [alexzhang13/rlm](https://
 
 ```mermaid
 graph TB
-    subgraph "User / Autonomous Researcher"
-        U[Conjecture / Corpus Scan]
+    U([Conjecture]) --> HYP
+
+    subgraph Dispatch
+        HYP[Hypothesis Gen] --> Score
+        Score --> Select
     end
 
-    subgraph "Dispatcher"
-        D[Priority Scorer]
-        D --> |"score by info gain × relevance"| SEL[Branch Selector]
-    end
+    Select --> Branch
 
-    U --> HYP[Hypothesis Generator]
-    HYP --> |"3-7 candidates"| D
-
-    subgraph "Branch Execution (per hypothesis)"
+    subgraph Branch
         direction LR
-        PRV[Prover Agent<br/>RLM Session]
-        BRK[Breaker Agent<br/>RLM Session]
-        SCT[Scout Agent]
-        AUD[Auditor]
+        Prover <--> Breaker
+        Prover --> Auditor
+        Breaker --> Auditor
+        Scout --> Auditor
     end
 
-    SEL --> PRV
-    SEL --> BRK
-    SEL --> SCT
-    PRV --> AUD
-    BRK --> AUD
-
-    subgraph "Epistemic Substrate (6 layers)"
-        direction TB
-        L0[Layer 0: Research Ledger<br/>Raw observations, queryable by source/modality/time/keyword]
-        L1[Layer 1: Claim Graph<br/>Support / contradiction / dependency edges, confidence propagation]
-        L2[Layer 2: Branch Capsules<br/>Per-hypothesis working memory with temporal beliefs]
-        L3[Layer 3: Agenda Capsule<br/>Active / stalled / tension branches]
-        L4[Layer 4: Prior Library<br/>Reusable beliefs with scope, transfer scores, evidence]
-        L5[Layer 5: Anti-Prior Bank<br/>Cognitive traps and disproven patterns]
-        L0 --- L1 --- L2 --- L3 --- L4 --- L5
+    subgraph REPL["RLM Sandbox (per agent)"]
+        direction LR
+        Code[Code Exec] --> Vars[Variables]
+        Vars --> Sub[rlm_query]
+        Sub --> Code
     end
 
-    PRV <--> |"search(), add_claim(),<br/>store(), rlm_query()"| L0
-    PRV <--> L1
-    BRK <--> L0
-    BRK <--> L1
-    SCT --> L0
-    SCT --> L1
-    AUD --> L1
+    Prover <-.-> REPL
+    Breaker <-.-> REPL
 
-    AUD --> |"pass/warn/fail"| VERDICT{Verdict}
-    VERDICT --> |"proved"| PROMOTE[Prior Promotion]
-    VERDICT --> |"broken"| BROKEN[Mark Broken]
-    PROMOTE --> L4
-
-    subgraph "Feedback Agents"
-        TS[Toolsmith<br/>Proposes + registers<br/>composite tools]
-        PE[Prior Editor<br/>Strengthen / weaken /<br/>demote / create anti-priors]
-        AN[Analyst<br/>Statistics, graphs,<br/>claim fact-checking]
+    subgraph Substrate
+        Ledger --> Graph
+        Graph --> Capsules
+        Capsules --> Agenda
+        Agenda --> Priors
+        Priors --> AntiPriors[Anti-Priors]
     end
 
-    D --> |"every 2 steps"| TS
-    D --> |"every 3 steps"| PE
-    PE --> |"demote"| REPAIR[Proof Repair]
-    REPAIR --> |"halve confidence,<br/>reopen branches"| L2
+    REPL <--> Substrate
 
-    subgraph "Synthesis"
-        SYN[Synthesizer Agent]
-    end
-    D --> |"final"| SYN
-    SYN --> REPORT[Object conclusion<br/>Narrative conclusion<br/>Divergence analysis<br/>Top support/counter<br/>Unresolved questions<br/>New priors learned]
+    Auditor --> |proved| Priors
+    Auditor --> |broken| Agenda
 
-    subgraph "Tool Library"
-        PRIM[19 Primitive Tools<br/>search, timeline, thread,<br/>figure, paper, bot detect,<br/>source credibility, ...]
-        COMP[8+ Composite Tools<br/>rumor tracer, language shift,<br/>figure linker, coverage gap,<br/>benchmark diff, ...]
-        TS --> |"auto-create"| COMP
+    subgraph Feedback
+        Toolsmith --> Tools
+        PriorEditor --> Priors
+        PriorEditor --> |demote| Repair[Proof Repair]
+        Repair --> Capsules
+        Analyst --> Graph
     end
 
-    PRV <--> PRIM
-    BRK <--> PRIM
+    Select --> Feedback
+    Auditor --> Synth[Synthesizer]
+    Synth --> Report([Report])
+
+    subgraph Tools
+        Primitives
+        Composites
+        Toolsmith --> Composites
+    end
+
+    REPL <--> Tools
 ```
 
 ## How it works
