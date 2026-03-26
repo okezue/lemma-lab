@@ -5,48 +5,77 @@ def _uid():return hashlib.md5(str(time.time()+random.random()).encode()).hexdige
 MODELS=["grok-4-fast-non-reasoning","grok-3","grok-3-mini"]
 MW=[0.6,0.25,0.15]
 
-_BANK_EN=["ocean","revolution","grandmother","telescope","monsoon","cinnamon",
-"cathedral","firefly","glacier","labyrinth","bamboo","thunder","origami","volcano",
-"saffron","midnight","accordion","avalanche","chameleon","dandelion","eclipse",
-"fossil","horizon","jasmine","kaleidoscope","lantern","mosaic","nebula","oracle",
-"pilgrim","quartz","raven","silhouette","tapestry","umbrella","vortex","wanderlust",
-"zenith","archipelago","bohemian","chrysalis","dervish","ephemeral","fjord","gossamer",
+_BANK=[
+"ocean","revolution","grandmother","telescope","monsoon","cinnamon","cathedral",
+"firefly","glacier","labyrinth","bamboo","thunder","origami","volcano","saffron",
+"midnight","accordion","avalanche","chameleon","dandelion","eclipse","fossil",
+"horizon","jasmine","kaleidoscope","lantern","mosaic","nebula","oracle","pilgrim",
+"quartz","raven","silhouette","tapestry","umbrella","vortex","wanderlust","zenith",
+"archipelago","bohemian","chrysalis","dervish","ephemeral","fjord","gossamer",
 "halcyon","iridescent","juxtapose","kinetic","luminous","melancholy","nomadic",
 "obsidian","paradox","quintessence","rhapsody","serendipity","transient","utopia",
 "vivacious","whimsical","canopy","ember","prism","anchor","drought","lullaby",
 "scaffold","mercury","thistle","pendulum","cobalt","estuary","marionette","tundra",
 "almanac","siren","terrazzo","conduit","patina","solstice","resonance","chimera",
 "filament","verdant","crucible","threshold","cartography","emissary","nocturne",
-"tributary","helios","artifact","cipher","meridian","sovereignty","chrysanthemum",
-"labyrinthine","catharsis","tessellation","phosphorescence","petrichor","aurora",
-"undertow","reverie","obsidian","plumeria","monstera","baobab","cenotaph","pagoda"]
-_BANK_MULTI=[
+"tributary","helios","artifact","cipher","meridian","chrysanthemum","catharsis",
+"tessellation","phosphorescence","petrichor","aurora","undertow","reverie","pagoda",
 "sakura","hanami","wabi-sabi","ikigai","komorebi","tsundoku","shinrin-yoku",
-"saudade","madrugada","desenrascanço","cafuné",
-"gemütlichkeit","wanderlust","zeitgeist","fernweh","schadenfreude","weltschmerz",
-"ubuntu","safari","bongo","hakuna","jambo","simba",
+"saudade","madrugada","desenrascanço","cafuné","gemütlichkeit","zeitgeist","fernweh",
+"schadenfreude","weltschmerz","ubuntu","safari","bongo","hakuna","jambo","simba",
 "namaste","jugaad","chai","dharma","karma","moksha","raga","tabla","tandoor",
-"meraki","filoxenia","kefi","psithurism",
-"hygge","fika","lagom","friluftsliv","smörgåsbord","skål",
-"toska","troika","babushka","samovar","dacha",
-"sobremesa","duende","querencia","tertulia","madrugada",
-"bazaar","kismet","serendib","divan","caravan","harem",
-"qi","tao","feng-shui","dim-sum","kung-fu","wok",
-"hallyeo","jeong","han","nunchi","aegyo",
-"terroir","flâneur","joie-de-vivre","raison-d'être","coup-de-grâce",
-"dolce-vita","sprezzatura","chiaroscuro","piazza","grotto",
-"cenote","milpa","copal","temazcal","alebrije",
-"djembe","griot","baobab","dashiki","kente",
-"didgeridoo","billabong","barramundi","boomerang","outback",
-"marae","haka","mana","tapu","aroha",
-"favela","capoeira","axé","forró","açaí",
-"souk","hammam","tajine","medina","riad",
-"yurt","steppe","kumis","dombra","felt",
-"tuk-tuk","pad-thai","songkran","wai","muay",
-"pho","ao-dai","tet","banh-mi","non-la"]
+"meraki","filoxenia","kefi","psithurism","hygge","fika","lagom","friluftsliv",
+"smörgåsbord","skål","toska","troika","babushka","samovar","dacha","sobremesa",
+"duende","querencia","tertulia","bazaar","kismet","serendib","divan","caravan",
+"qi","tao","feng-shui","dim-sum","kung-fu","wok","jeong","han","nunchi","aegyo",
+"terroir","flâneur","joie-de-vivre","dolce-vita","sprezzatura","chiaroscuro",
+"piazza","grotto","cenote","milpa","copal","temazcal","alebrije","djembe","griot",
+"baobab","dashiki","kente","didgeridoo","billabong","boomerang","outback","marae",
+"haka","mana","tapu","aroha","favela","capoeira","axé","forró","açaí","souk",
+"hammam","tajine","medina","riad","yurt","steppe","kumis","dombra","tuk-tuk",
+"songkran","wai","muay","pho","ao-dai","banh-mi"]
+_DATAMUSE_SEEDS=["mountain","river","storm","forest","desert","island","village",
+"market","temple","harvest","journey","ancestor","medicine","rhythm","textile",
+"spice","pottery","weaving","fishing","migration","ceremony","monsoon","twilight",
+"constellation","reef","canyon","volcano","prairie","delta","oasis","glacier",
+"savanna","taiga","mangrove","atoll","plateau","gorge","lagoon","peninsula","mesa"]
+_ssl_ctx=None
+def _get_ssl():
+    global _ssl_ctx
+    if not _ssl_ctx:
+        import ssl;_ssl_ctx=ssl.create_default_context()
+        _ssl_ctx.check_hostname=False;_ssl_ctx.verify_mode=ssl.CERT_NONE
+    return _ssl_ctx
+def _api_datamuse_related(n=5):
+    seed=random.choice(_DATAMUSE_SEEDS)
+    endpoint=random.choice(["rel_trg","ml","rel_jja","rel_jjb"])
+    url=f"https://api.datamuse.com/words?{endpoint}={seed}&max={n*2}"
+    r=urllib.request.urlopen(url,timeout=5,context=_get_ssl())
+    words=[w["word"] for w in json.loads(r.read()) if " " not in w["word"]]
+    random.shuffle(words)
+    return words[:n]
+def _api_datamuse_pattern(n=5):
+    patterns=["????","?????","??????","???????"]
+    url=f"https://api.datamuse.com/words?sp={random.choice(patterns)}&max={n*3}"
+    r=urllib.request.urlopen(url,timeout=5,context=_get_ssl())
+    words=[w["word"] for w in json.loads(r.read())]
+    random.shuffle(words)
+    return words[:n]
+def _api_datamuse_sounds_like(n=5):
+    seed=random.choice(_BANK[:50])
+    url=f"https://api.datamuse.com/words?sl={seed}&max={n*2}"
+    r=urllib.request.urlopen(url,timeout=5,context=_get_ssl())
+    words=[w["word"] for w in json.loads(r.read()) if w["word"]!=seed and " " not in w["word"]]
+    return words[:n]
 def _random_words(n=3):
-    pool=_BANK_EN+_BANK_MULTI
-    return random.sample(pool,min(n,len(pool)))
+    apis=[_api_datamuse_related,_api_datamuse_pattern,_api_datamuse_sounds_like]
+    random.shuffle(apis)
+    for api in apis:
+        try:
+            words=api(n)
+            if len(words)>=n:return words[:n]
+        except:continue
+    return random.sample(_BANK,min(n,len(_BANK)))
 
 class Mem:
     def __init__(self):
